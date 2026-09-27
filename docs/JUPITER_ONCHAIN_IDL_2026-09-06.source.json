@@ -1,0 +1,14 @@
+{
+  "retrievedAtUtc": "2026-09-06T06:27:20.568257+00:00",
+  "rpcEndpoint": "https://api.mainnet-beta.solana.com",
+  "commitment": "finalized",
+  "rpcContextSlot": 444724285,
+  "programOwner": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+  "idlAccount": "C88XWfp26heEmDkmfSzeXP7Fd7GQJ2j9dDTUsyiZbUTa",
+  "derivation": "base = find_program_address([], program); idl = create_with_seed(base, \"anchor:idl\", program)",
+  "accountDataBytes": 6314,
+  "idlJsonBytes": 29350,
+  "idlSha256": "ccc432865fca208e5650ac004d6cb7df48181a59ccafd4425271a0d4a278f3a9",
+  "accountDataSha256": "06412b74629f89cfbeef7457aa31ef2eb0219385219bb218a6d7d50172d01816",
+  "source": "Jupiter program-owned on-chain Anchor IDL; no credentials, transaction build, signing, or submission used"
+}
