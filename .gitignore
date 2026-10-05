@@ -22,3 +22,6 @@ __pycache__/
 .calibration-venv/
 coverage/
 *.tsbuildinfo
+
+!src/data/
+!src/data/demo.ts
