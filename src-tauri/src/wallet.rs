@@ -281,6 +281,17 @@ pub(crate) fn portfolio_total(value: &Value) -> f64 {
 mod tests {
     use super::*;
 
+    #[cfg(not(target_os = "windows"))]
+    #[test]
+    fn unsupported_vault_cannot_import_or_sign() {
+        assert!(entry().is_err());
+        assert!(import_file().is_err());
+        assert!(load_keypair().is_err());
+        let state = status().unwrap();
+        assert!(!state.imported);
+        assert_eq!(state.storage, "Unavailable on this platform");
+    }
+
     #[test]
     fn accepts_base58_and_json_keypairs() {
         let keypair = Keypair::new();
