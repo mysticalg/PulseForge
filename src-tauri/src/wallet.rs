@@ -12,6 +12,7 @@ pub const GAS_RESERVE_SOL: f64 = 0.02;
 static CREDENTIAL_LOCK: std::sync::Mutex<()> = std::sync::Mutex::new(());
 static STORE_READY: std::sync::OnceLock<Result<(), String>> = std::sync::OnceLock::new();
 
+#[cfg(target_os = "windows")]
 fn entry() -> Result<Entry, String> {
     STORE_READY
         .get_or_init(|| {
@@ -27,7 +28,13 @@ fn entry() -> Result<Entry, String> {
         .map_err(|error| format!("Windows Credential Manager: {error}"))
 }
 
+#[cfg(not(target_os = "windows"))]
+fn entry() -> Result<Entry, String> {
+    Err("Wallet import and live signing are unavailable on Linux/macOS in this build; use market research and paper trading.".into())
+}
+
 pub fn import_file() -> Result<WalletStatus, String> {
+    entry()?; // Reject unsupported vaults before opening or reading a private-key file.
     let path = rfd::FileDialog::new()
         .set_title("Import an isolated Solana hot-wallet keypair")
         .add_filter("Solana keypair", &["json", "txt"])
@@ -55,7 +62,7 @@ pub fn import_file() -> Result<WalletStatus, String> {
     Ok(WalletStatus {
         imported: true,
         address: Some(address),
-        storage: "Windows Credential Manager".into(),
+        storage: if cfg!(target_os = "windows") { "Windows Credential Manager" } else { "Unavailable on this platform" }.into(),
         warning: Some(format!(
             "Imported into the local Windows vault. The original file remains at {} and should be protected separately.",
             path.display()
@@ -68,7 +75,7 @@ pub fn status() -> Result<WalletStatus, String> {
         Ok(keypair) => Ok(WalletStatus {
             imported: true,
             address: Some(keypair.pubkey().to_string()),
-            storage: "Windows Credential Manager".into(),
+            storage: if cfg!(target_os = "windows") { "Windows Credential Manager" } else { "Unavailable on this platform" }.into(),
             warning: Some(
                 "This app can access the imported hot-wallet key while you are signed in to Windows."
                     .into(),
@@ -78,14 +85,14 @@ pub fn status() -> Result<WalletStatus, String> {
             Ok(WalletStatus {
                 imported: false,
                 address: None,
-                storage: "Windows Credential Manager".into(),
+                storage: if cfg!(target_os = "windows") { "Windows Credential Manager" } else { "Unavailable on this platform" }.into(),
                 warning: None,
             })
         }
         Err(error) => Ok(WalletStatus {
             imported: false,
             address: None,
-            storage: "Windows Credential Manager".into(),
+            storage: if cfg!(target_os = "windows") { "Windows Credential Manager" } else { "Unavailable on this platform" }.into(),
             warning: Some(error),
         }),
     }
@@ -105,7 +112,7 @@ pub fn forget() -> Result<WalletStatus, String> {
     Ok(WalletStatus {
         imported: false,
         address: None,
-        storage: "Windows Credential Manager".into(),
+        storage: if cfg!(target_os = "windows") { "Windows Credential Manager" } else { "Unavailable on this platform" }.into(),
         warning: Some("The local credential was removed. On-chain funds were not changed.".into()),
     })
 }

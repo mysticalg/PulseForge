@@ -6,6 +6,17 @@ Download the Windows x64 installer from Releases. Node.js and Rust are only requ
 
 PulseForge is a Windows-first Solana altcoin scanner and paper-trading workstation. It blends recent-pool, five-minute trending, organic-activity, and top-traded discovery with a compact tree-ensemble baseline, deterministic safety vetoes, paper positions, an emergency stop, and a native hot-wallet vault.
 
+## Linux and macOS
+
+Choose Linux x64 `.deb`/`.AppImage`, macOS Intel (`x64`) `.dmg`, or Apple Silicon (`aarch64`) `.dmg` from [Releases](https://github.com/mysticalg/PulseForge/releases/latest). Linux builds target Ubuntu 22.04 or newer with WebKitGTK 4.1. Install the Debian package with `sudo apt install ./PulseForge_*.deb`; for AppImage, run `chmod +x PulseForge_*.AppImage` then execute it (FUSE may be required; `--appimage-extract-and-run` is an alternative). On Mac open the DMG and drag PulseForge to Applications. These builds are unsigned and not notarized; macOS may require explicit approval in System Settings → Privacy & Security.
+
+**Linux/macOS builds support market research and paper trading. Wallet import, wallet valuation and live signing are unavailable because the existing vault uses Windows Credential Manager.** They do not fall back to plaintext key storage. Windows retains its existing wallet support.
+
+To build from source, install Node.js 24 LTS and stable Rust. On Mac install Xcode Command Line Tools (`xcode-select --install`). On Ubuntu install `libwebkit2gtk-4.1-dev build-essential curl wget file libxdo-dev libssl-dev librsvg2-dev libayatana-appindicator3-dev patchelf`. Then run `npm ci` and `npm run tauri build -- --ci`. Platform configuration selects DMG on macOS and DEB/AppImage on Linux. See [Tauri prerequisites](https://v2.tauri.app/start/prerequisites/).
+
+Native builds and tests run in the **Build Linux and macOS downloads** GitHub Actions workflow before release upload. A passing build verifies compilation and automated tests; desktop interaction on physical Linux/Mac machines has not yet been verified.
+
+
 ## Capability status
 
 | Capability | v0.10.8 |
